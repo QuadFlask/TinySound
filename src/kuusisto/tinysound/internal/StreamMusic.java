@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import kuusisto.tinysound.Music;
+import kuusisto.tinysound.OnStopListener;
 import kuusisto.tinysound.TinySound;
 
 /**
@@ -308,7 +309,8 @@ public class StreamMusic implements Music {
 		private long position;
 		private double volume;
 		private double pan;
-		
+		private OnStopListener onStopListener;
+
 		/**
 		 * Constructs a new StreamMusicReference with the given audio data and
 		 * settings.
@@ -627,6 +629,13 @@ public class StreamMusic implements Music {
 			} catch (IOException e) {
 				//whatever... this should never happen
 			}
+
+			if (onStopListener != null) onStopListener.onStop();
+		}
+
+		@Override
+		public void setOnStopListener(OnStopListener listener) {
+			this.onStopListener = listener;
 		}
 	}
 }

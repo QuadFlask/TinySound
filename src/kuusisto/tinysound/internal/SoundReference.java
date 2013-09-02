@@ -26,6 +26,8 @@
  */
 package kuusisto.tinysound.internal;
 
+import kuusisto.tinysound.OnStopListener;
+
 /**
  * The SoundReference interface is the Mixer's interface to the audio data of a
  * Sound object.  SoundReference is an internal interface of the TinySound
@@ -77,5 +79,7 @@ public interface SoundReference {
 	 * SoundReference.
 	 */
 	public void dispose();
-	
+
+	public void setOnStopListener(OnStopListener listener);
+
 }

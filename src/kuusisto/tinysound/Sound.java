@@ -39,12 +39,16 @@ public interface Sound {
 	 * Plays this Sound.
 	 */
 	public void play();
-	
+
+	public void play(OnStopListener listener);
+
 	/**
 	 * Plays this Sound with a specified volume.
 	 * @param volume the volume at which to play this Sound
 	 */
 	public void play(double volume);
+
+	public void play(double volume, OnStopListener listener);
 	
 	/**
 	 * Plays this Sound with a specified volume and pan.
@@ -53,7 +57,9 @@ public interface Sound {
 	 * the valid range will assume no panning (0.0)
 	 */
 	public void play(double volume, double pan);
-	
+
+	public void play(double volume, double pan, OnStopListener listener);
+
 	/**
 	 * Stops this Sound from playing.  Note that if this Sound was played
 	 * repeatedly in an overlapping fashion, all instances of this Sound still
@@ -66,5 +72,5 @@ public interface Sound {
 	 * unloading will result in error.
 	 */
 	public void unload();
-	
+
 }

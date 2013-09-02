@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import kuusisto.tinysound.OnStopListener;
 import kuusisto.tinysound.Sound;
 
 /**
@@ -74,6 +75,11 @@ public class StreamSound implements Sound {
 		this.play(1.0);
 	}
 
+	@Override
+	public void play(OnStopListener listener) {
+		this.play(1.0, listener);
+	}
+
 	/**
 	 * Plays this StreamSound with a specified volume.
 	 * @param volume the volume at which to play this StreamSound
@@ -81,6 +87,11 @@ public class StreamSound implements Sound {
 	@Override
 	public void play(double volume) {
 		this.play(volume, 0.0);
+	}
+
+	@Override
+	public void play(double volume, OnStopListener listener) {
+		this.play(volume, 0, listener);
 	}
 
 	/**
@@ -91,11 +102,17 @@ public class StreamSound implements Sound {
 	 */
 	@Override
 	public void play(double volume, double pan) {
+		this.play(volume, pan, null);
+	}
+
+	@Override
+	public void play(double volume, double pan, OnStopListener listener) {
 		//dispatch a SoundReference to the mixer
 		SoundReference ref;
 		try {
 			ref = new StreamSoundReference(this.dataURL.openStream(),
 					this.numBytesPerChannel, volume, pan, this.ID);
+			ref.setOnStopListener(listener);
 			this.mixer.registerSoundReference(ref);
 		} catch (IOException e) {
 			System.err.println("Failed to open stream for Sound");
@@ -144,7 +161,8 @@ public class StreamSound implements Sound {
 		private double pan;
 		private byte[] buf;
 		private byte[] skipBuf;
-		
+		private OnStopListener onStopListener;
+
 		/**
 		 * Construct a new StreamSoundReference with the given reference data.
 		 * @param data the stream of the audio data
@@ -307,6 +325,13 @@ public class StreamSound implements Sound {
 			}
 			this.buf = null;
 			this.skipBuf = null;
+
+			if (onStopListener != null) onStopListener.onStop();
+		}
+
+		@Override
+		public void setOnStopListener(OnStopListener listener) {
+			this.onStopListener = listener;
 		}
 
 	}
